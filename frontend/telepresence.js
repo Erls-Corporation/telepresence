@@ -79,11 +79,10 @@ Participant.prototype.remove = function remove(){
   this.el.remove();
 }
 
+var TRAPS = ['UNKNOWN', 'GET', 'SET', 'DESCRIBE', 'DEFINE', 'DELETE', 'HAS',
+  'OWNS', 'ENUMERATE', 'KEYS', 'NAMES', 'FIX', 'APPLY', 'CONSTRUCT' ];
 
-var TRAPS = {};
-['UNKNOWN', 'GET', 'SET', 'DESCRIBE', 'DEFINE', 'DELETE', 'HAS',
-  'OWNS', 'ENUMERATE', 'KEYS', 'NAMES', 'FIX', 'APPLY', 'CONSTRUCT' ]
-.forEach(function(trap, index){
+TRAPS.forEach(function(trap, index){
   TRAPS[trap] = index;
 });
 
