@@ -14,7 +14,7 @@ eval(utility.importCMDS);
 
 var Session = require('./lib/socket-server').Session;
 var server = require('./lib/socket-server').createServer({
-  port: 80,
+  port: 8080,
   webroot:  path.resolve(__dirname, './frontend'),
 });
 
