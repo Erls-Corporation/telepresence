@@ -22,7 +22,7 @@ var websocket = server.websocket;
 
 
 websocket.on('connection', function(client){
-  client.on('error', logJSON)
+  client.on('error', logJSON);
   client.once('message', function(data){
     logJSON(data);
     if (data[0] === EVENT_TOKEN) {
