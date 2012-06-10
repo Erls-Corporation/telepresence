@@ -107,13 +107,11 @@ _('#accept').on('click', function(e){
       return context.window.$(a, b);
     }
 
-    context.dispatcher.on('remote-event', function(evt, record){
-      setTimeout(function(){
-        var trap = TRAPS[record.trap];
-        if (trap === 'APPLY' || trap === 'SET' || trap === 'CONSTRUCT' || trap === 'DEFINE' || trap === 'DELETE') {
-          var li = _('li.'+trap).prependTo('#events ul');
-          li.content = record.name
-        }
+    var events = _('#events ul');
+
+    context.dispatcher.reifier.on('SET CONSTRUCT DEFINE APPLY DELETE', function(evt, record){
+      var li = _('li.'+TRAPS[record.trap]).prependTo(events);
+      li.content = record.name;
       }, 20);
     });
 

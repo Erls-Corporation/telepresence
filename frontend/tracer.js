@@ -356,7 +356,7 @@ function Reifier(dispatcher, context){
     var record = Record.deserialize(json);
     record.name = self.resolveName(record.name);
     record.result = self[record.trap](record);
-    //self.emit(record.trap, record);
+    self.emit(record.trap, record);
   });
 }
 
