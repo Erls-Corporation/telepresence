@@ -110,7 +110,7 @@ _('#accept').on('click', function(e){
     var events = _('#events ul');
 
     context.dispatcher.reifier.on('SET CONSTRUCT DEFINE APPLY DELETE', function(evt, record){
-      var li = _('li.'+TRAPS[record.trap]).prependTo(events);
+      var li = _('li.'+record.trap).prependTo(events);
       li.content = record.name;
     });
 
