@@ -112,7 +112,6 @@ _('#accept').on('click', function(e){
     context.dispatcher.reifier.on('SET CONSTRUCT DEFINE APPLY DELETE', function(evt, record){
       var li = _('li.'+TRAPS[record.trap]).prependTo(events);
       li.content = record.name;
-      }, 20);
     });
 
     // context.dispatcher.broadcaster.on('broadcast', function(e, record){
