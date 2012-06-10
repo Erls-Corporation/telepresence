@@ -110,7 +110,11 @@ _('#accept').on('click', function(e){
 
     context.dispatcher.on('remote-event', function(evt, record){
       setTimeout(function(){
-        _('li|'+record.trap + ' ' + record.name).appendTo('#events ul');
+        var trap = TRAPS[record.trap];
+        if (trap === 'APPLY' || trap === 'SET' || trap === 'CONSTRUCT' || trap === 'DEFINE' || trap === 'DELETE') {
+          var li = _('li.'+trap).prependTo('#events ul');
+          li.content = record.name
+        }
       }, 20);
     });
 

@@ -319,7 +319,10 @@
     prependTo: function prependTo(parent){
       parent = single(parent);
       this.forEach(function(el){
-        parent.insertBefore(el, parent.firstChild);
+        if (parent.firstChild)
+          parent.insertBefore(el, parent.firstChild);
+        else
+          parent.appendChild(el);
       });
       return this;
     },
