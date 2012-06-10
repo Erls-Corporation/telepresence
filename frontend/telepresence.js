@@ -102,14 +102,22 @@ _('#accept').on('click', function(e){
   _('#events').delay(300).addClass('activated');
   _('#initializing').delay(300).css({ display: 'none' });
 
-  var events = _('#events ul');
-  context.dispatcher.reifier.on('*', function(e, record){
-    events.append('li|'+record.type);
-  });
+  context.on('ready', function(){
 
-  // context.dispatcher.broadcaster.on('broadcast', function(e, record){
-  //   events.append('li|'+TRAPS[e.data.type]);
-  // });
+    window.$ = function $(a,b){
+      return context.window.$(a, b);
+    }
+
+    context.dispatcher.on('remote-event', function(evt, record){
+      setTimeout(function(){
+        _('li|'+record.trap + ' ' + record.name).appendTo('#events ul');
+      }, 20);
+    });
+
+    // context.dispatcher.broadcaster.on('broadcast', function(e, record){
+    //   events.append('li|'+TRAPS[e.data.type]);
+    // });
+  });
 
   context.loadCode('./jquery-1.7.2.js');
   console.log(window.c = context);
