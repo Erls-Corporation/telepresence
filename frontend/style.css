@@ -74,12 +74,13 @@ h2
   .item-list li
   { padding-right: 7px; line-height: 35px; text-align: right; height: 30px; margin: 10px 0; position: relative; }
   .item-list li
-  { color: #eee; cursor: pointer; font-size: 18px;
+  { color: #eee; cursor: pointer; font-size: 14px;
     box-shadow:
       0 0  2px 1px hsla(30, 100%, 20%, 1) inset,
       0 0  8px 3px hsla(30, 100%, 10%, 1) inset;
     text-shadow:
-      0 0  3px     hsla(30, 100%, 30%, 1),  
+    2px 2px 1px    #000,
+      0 0  3px     hsla(30, 100%, 30%, 1),
       0 0  6px     hsla(30, 100%, 20%, 1),
       0 0 15px     hsla(30, 100%, 10%, 1);
     background: -moz-linear-gradient(     -20deg,
@@ -97,6 +98,7 @@ h2
       0 0  2px 1px hsla( 30, 100%,  70%, 1) inset,
       0 0  8px 3px hsla( 30, 100%,  50%, 1) inset;
     text-shadow:
+       2px 2px 1px #000,
           0 0  3px hsla( 30, 100%,  80%, 1),
           0 0  6px hsla( 30, 100%,  60%, 1),
           0 0 15px hsla( 30, 100%,  50%, 1); }
@@ -255,17 +257,19 @@ h2
 
 
 .APPLY:before, .CONSTRUCT:before, .DELETE:before, .DEFINE:before, .SET:before
-{ position: absolute; top: 0; left: 7px; display: block; line-height: 35px; height: 30px; }
+{ position: absolute; top: 0; left: 7px; display: block; line-height: 35px; height: 30px; font-size: 16px; }
 
 
-.SET:before
-{ content: "SET"; }
+#events .SET:before
+{ content: "SET";
+  color:         hsla(60, 100%, 80%, 1); }
 
 #events .SET
 { box-shadow:
     0 0  2px 1px hsla(60, 100%, 20%, 1) inset,
     0 0  8px 3px hsla(60, 100%, 10%, 1) inset;
   text-shadow:
+    2px 2px 1px  #000,
     0 0  3px     hsla(60, 100%, 30%, 1),
     0 0  6px     hsla(60, 100%, 20%, 1),
     0 0 15px     hsla(60, 100%, 10%, 1);
@@ -279,22 +283,25 @@ h2
                  hsla(60, 100%, 15%, .8)); }
 #events .SET:hover
 { box-shadow:
-    0 0  2px 1px hsla(100, 100%,  70%, 1) inset,
-    0 0  8px 3px hsla(100, 100%,  50%, 1) inset;
+    0 0  2px 1px hsla(60, 100%,  70%, 1) inset,
+    0 0  8px 3px hsla(60, 100%,  50%, 1) inset;
   text-shadow:
-        0 0  3px hsla(100, 100%,  80%, 1),
-        0 0  6px hsla(100, 100%,  60%, 1),
-        0 0 15px hsla(100, 100%,  50%, 1); }
+    2px 2px 1px  #000,
+        0 0  3px hsla(60, 100%,  80%, 1),
+        0 0  6px hsla(60, 100%,  60%, 1),
+        0 0 15px hsla(60, 100%,  50%, 1); }
 
 
-.APPLY:before
-{ content: "APPLY"; }
+#events .APPLY:before
+{ content: "APPLY";
+  color:         hsla(220, 100%, 80%, 1); }
 
 #events .APPLY
 { box-shadow:
     0 0  2px 1px hsla(220, 100%, 20%, 1) inset,
     0 0  8px 3px hsla(220, 100%, 10%, 1) inset;
   text-shadow:
+    2px 2px 1px  #000,
     0 0  3px     hsla(220, 100%, 30%, 1),
     0 0  6px     hsla(220, 100%, 20%, 1),
     0 0 15px     hsla(220, 100%, 10%, 1);
@@ -312,20 +319,23 @@ h2
     0 0  2px 1px hsla(220, 100%,  70%, 1) inset,
     0 0  8px 3px hsla(220, 100%,  50%, 1) inset;
   text-shadow:
+    2px 2px 1px  #000,
         0 0  3px hsla(220, 100%,  80%, 1),
         0 0  6px hsla(220, 100%,  60%, 1),
         0 0 15px hsla(220, 100%,  50%, 1); }
 
 
 
-.CONSTRUCT:before
-{ content: "CONSTRUCT"; }
+#events .CONSTRUCT:before
+{ content: "CONSTRUCT";
+  color:         hsla(160, 100%, 80%, 1); }
 
 #events .CONSTRUCT
 { box-shadow:
     0 0  2px 1px hsla(160, 100%, 20%, 1) inset,
     0 0  8px 3px hsla(160, 100%, 10%, 1) inset;
   text-shadow:
+    2px 2px 1px  #000,
     0 0  3px     hsla(160, 100%, 30%, 1), 
     0 0  6px     hsla(160, 100%, 20%, 1),
     0 0 15px     hsla(160, 100%, 10%, 1);
@@ -343,20 +353,23 @@ h2
     0 0  2px 1px hsla(160, 100%,  70%, 1) inset,
     0 0  8px 3px hsla(160, 100%,  50%, 1) inset;
   text-shadow:
+    2px 2px 1px  #000,
         0 0  3px hsla(160, 100%,  80%, 1),
         0 0  6px hsla(160, 100%,  60%, 1),
         0 0 15px hsla(160, 100%,  50%, 1); }
 
 
 
-.DELETE:before
-{ content: "DELETE"; }
+#events .DELETE:before
+{ content: "DELETE";
+  color:         hsla(  0, 100%, 80%, 1); }
 
 #events .DELETE
 { box-shadow:
     0 0  2px 1px hsla(  0, 100%, 20%, 1) inset,
     0 0  8px 3px hsla(  0, 100%, 10%, 1) inset;
   text-shadow:
+    2px 2px 1px  #000,
     0 0  3px     hsla(  0, 100%, 30%, 1),
     0 0  6px     hsla(  0, 100%, 20%, 1),
     0 0 15px     hsla(  0, 100%, 10%, 1);
@@ -374,35 +387,39 @@ h2
     0 0  2px 1px hsla(  0, 100%,  70%, 1) inset,
     0 0  8px 3px hsla(  0, 100%,  50%, 1) inset;
   text-shadow:
+    2px 2px 1px  #000,
         0 0  3px hsla(  0, 100%,  80%, 1),
         0 0  6px hsla(  0, 100%,  60%, 1),
         0 0 15px hsla(  0, 100%,  50%, 1); }
 
-.DEFINE:before
-{ content: "DEFINE"; }
+#events .DEFINE:before
+{ content: "DEFINE";
+  color:         hsla(180, 100%, 80%, 1); }
 
 #events .DEFINE
 { box-shadow:
-    0 0  2px 1px hsla(210, 100%, 20%, 1) inset,
-    0 0  8px 3px hsla(210, 100%, 10%, 1) inset;
+    0 0  2px 1px hsla(180, 100%, 20%, 1) inset,
+    0 0  8px 3px hsla(180, 100%, 10%, 1) inset;
   text-shadow:
-    0 0  3px     hsla(210, 100%, 30%, 1),
-    0 0  6px     hsla(210, 100%, 20%, 1),
-    0 0 15px     hsla(210, 100%, 10%, 1);
+    2px 2px 1px  #000,
+    0 0  3px     hsla(180, 100%, 30%, 1),
+    0 0  6px     hsla(180, 100%, 20%, 1),
+    0 0 15px     hsla(180, 100%, 10%, 1);
   background: -moz-linear-gradient(     -20deg,
-                 hsla(210, 100%, 20%, .8) 15%,
-                 hsla(210, 100%, 45%, .8) 65%,
-                 hsla(210, 100%, 15%, .8));
+                 hsla(180, 100%, 20%, .8) 15%,
+                 hsla(180, 100%, 45%, .8) 65%,
+                 hsla(180, 100%, 15%, .8));
   background: -webkit-linear-gradient(  -20deg,
-                 hsla(210, 100%, 20%, .8) 15%,
-                 hsla(210, 100%, 45%, .8) 65%,
-                 hsla(210, 100%, 15%, .8)); }
+                 hsla(180, 100%, 20%, .8) 15%,
+                 hsla(180, 100%, 45%, .8) 65%,
+                 hsla(180, 100%, 15%, .8)); }
 
 #events .DEFINE:hover
 { box-shadow:
-    0 0  2px 1px hsla(210, 100%,  70%, 1) inset,
-    0 0  8px 3px hsla(210, 100%,  50%, 1) inset;
+    0 0  2px 1px hsla(180, 100%,  70%, 1) inset,
+    0 0  8px 3px hsla(180, 100%,  50%, 1) inset;
   text-shadow:
-        0 0  3px hsla(210, 100%,  80%, 1),
-        0 0  6px hsla(210, 100%,  60%, 1),
-        0 0 15px hsla(210, 100%,  50%, 1); }
+    2px 2px 1px  #000,
+        0 0  3px hsla(180, 100%,  80%, 1),
+        0 0  6px hsla(180, 100%,  60%, 1),
+        0 0 15px hsla(180, 100%,  50%, 1); }
