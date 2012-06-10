@@ -1,0 +1,252 @@
+@import url(http://fonts.googleapis.com/css?family=Exo:100,200,300,400,500,600,700,800,900,900italic,700italic,800italic,600italic,500italic,400italic,300italic,200italic,100italic&subset=latin,latin-ext);
+@import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:700);
+/*@import url(https://fonts.googleapis.com/css?family=Alfa+Slab+One);*/
+/*@import url(http://fonts.googleapis.com/css?family=Passion+One:400,700,900);*/
+/*@import url(http://fonts.googleapis.com/css?family=Exo:100italic,200italic,300italic,400italic,500italic,600italic,700italic,800italic,900italic&subset=latin,latin-ext);*/
+
+
+body
+{ background: hsl(0, 0%, 2%); color: hsl(0, 0%, 80%); font-size: 14px; }
+
+button
+{ cursor: pointer; background: none; }
+
+#new-session
+{ font-family: Exo; font-weight: 700; font-style: italic; }
+
+h1, h2, h3, h4, h5, h6
+{ font-family: "Yanone Kaffeesatz"; font-weight: 700;  }
+
+.item-list li, .glowbutton
+{ font-family: "Exo"; font-style: italic; font-weight: 900; color: #bbb;  }
+
+h1, h2, h3, h4, h5, h6
+{ margin: 0; }
+h1 { font-size: 3em }
+h2 { font-size: 2.2em }
+h3 { font-size: 1.8em }
+h4 { font-size: 1.6em }
+h5 { font-size: 1.4em }
+h6 { font-size: 1.2em }
+
+ul
+{ list-style: none; margin: 0; padding: 0; }
+
+a { color: hsla(0, 0%, 67%, 1); }
+
+h2
+{ text-align: center; }
+
+#masthead     { top:  10px; right:  10px;  left:   10px; height:  60px; }
+#holder       { top:  80px; right: 300px;  left:   10px; bottom:  10px;  }
+#participants { top:  80px; right:  10px;  width: 280px; height: 200px; }
+#events        { top: 290px; right:  10px;  width: 280px; bottom:  10px; }
+
+.glowbox
+{ opacity: .6; position: absolute; margin: 0; padding: 15px; list-style: none;
+  border:          1px solid hsla(260, 100%, 20%,  1);
+  box-shadow:       0 0 50px hsla(260, 100%, 40%, .3),
+                    0 0 50px hsla(260, 100%, 30%, .8) inset;
+  background:    -moz-linear-gradient(top, hsla(260, 100%, 30%, 0), hsla(260, 100%, 50%, .2));
+  background: -webkit-linear-gradient(top, hsla(260, 100%, 30%, 0), hsla(260, 100%, 50%, .2)); }
+
+
+#masthead.activated
+{ opacity: .6;
+  border:          1px solid hsla(120, 100%, 20%,  1);
+  box-shadow:       0 0 50px hsla(120, 100%, 40%, .3),
+                    0 0 50px hsla(120, 100%, 30%, .8) inset;
+  background:    -moz-linear-gradient(top, hsla(120, 100%, 30%, 0), hsla(120, 100%, 50%, .2));
+  background: -webkit-linear-gradient(top, hsla(120, 100%, 30%, 0), hsla(120, 100%, 50%, .2)); }
+
+.activated #initializing
+{ opacity: 0; }
+
+#events ul
+{ overflow: hidden; position: absolute; left: 15px; right: 15px; bottom: 15px; top: 50px; }
+
+.item-list ul
+{  }
+  .item-list h2
+  { opacity: 0; }
+  .item-list.activated h2
+  { opacity: 1; }
+  .item-list li
+  { padding-right: 7px; line-height: 35px; text-align: right; height: 30px; margin: 10px 0; }
+  .item-list li
+  { color: #eee; cursor: pointer; font-size: 18px;
+    box-shadow:
+      0 0  2px 1px hsla(30, 100%, 20%, 1) inset,
+      0 0  8px 3px hsla(30, 100%, 10%, 1) inset;
+    text-shadow:
+      0 0  3px     hsla(30, 100%, 30%, 1),  
+      0 0  6px     hsla(30, 100%, 20%, 1),
+      0 0 15px     hsla(30, 100%, 10%, 1);
+    background: -moz-linear-gradient(     -20deg,
+                   hsla(30, 100%, 20%, .4) 15%,
+                   hsla(30, 100%, 45%, .5) 65%,
+                   hsla(30, 100%, 15%, .6));
+    background: -webkit-linear-gradient(  -20deg,
+                   hsla(30, 100%, 20%, .4) 15%,
+                   hsla(30, 100%, 45%, .5) 65%,
+                   hsla(30, 100%, 15%, .6)); }
+
+  .item-list li:hover, #new-session:hover
+  { color: #fff;
+    box-shadow:
+      0 0  2px 1px hsla( 30, 100%,  70%, 1) inset,
+      0 0  8px 3px hsla( 30, 100%,  50%, 1) inset;
+    text-shadow:
+          0 0  3px hsla( 30, 100%,  80%, 1),
+          0 0  6px hsla( 30, 100%,  60%, 1),
+          0 0 15px hsla( 30, 100%,  50%, 1); }
+
+
+  .item-list .self
+  { box-shadow:
+      0 0  2px 1px hsla(120, 100%, 20%, 1) inset,
+      0 0  8px 3px hsla(120, 100%, 10%, 1) inset;
+    text-shadow:
+          0 0  3px hsla(120, 100%, 30%, 1),
+          0 0  6px hsla(120, 100%, 20%, 1),
+          0 0 15px hsla(120, 100%, 10%, 1);
+    background:
+    -moz-linear-gradient(
+    -20deg,        hsla(120, 100%, 20%, .4)  15%,
+                   hsla(120, 100%, 45%, .5)  65%,
+                   hsla(120, 100%, 15%, .6) 100%);
+    background:
+    -webkit-linear-gradient(
+    -20deg,        hsla(120, 100%, 20%, .4)  15%,
+                   hsla(120, 100%, 45%, .5)  65%,
+                   hsla(120, 100%, 15%, .6) 100%); }
+
+  .item-list .self:hover
+  { box-shadow:
+      0 0  2px 1px hsla(120, 100%, 70%, 1) inset,
+      0 0  8px 3px hsla(120, 100%, 50%, 1) inset;
+    text-shadow:
+          0 0  3px hsla(120, 100%, 80%, 1),
+          0 0  6px hsla(120, 100%, 60%, 1),
+          0 0 15px hsla(120, 100%, 50%, 1); }
+
+
+
+.glowbutton
+{ font-size: 30px; border-radius: 20px;
+  position: absolute; top: 40%; width: 250px; padding: 30px; margin: 0; z-index: 100;
+  color:          hsla(260,  53%, 20%, 1);
+  text-shadow:
+         0 0  2px hsla(260, 100%, 80%, 1),
+         0 0  3px hsla(260,  60%, 70%, 1),
+         0 0  4px hsla(260, 100%, 50%, 1),
+         0 0 25px hsla(260, 100%, 50%, 1); }
+
+
+
+.glowbutton:hover
+{ opacity: 1;
+  color:                    hsla(260, 100%, 70%, 1);
+  border:         2px solid hsla(  0,   0%, 70%, 1);
+  box-shadow:      0 0 75px hsla(260, 100%, 40%, 1),
+                   0 0 50px hsla(260, 100%, 50%, 1) inset;
+  text-shadow:     0 0  2px hsla(  0,   0%,  0%, 1),
+                   0 0  5px hsla(260, 100%, 70%, 1),
+                   0 0 10px hsla(260, 100%, 40%, 1),
+                   0 0 25px hsla(260, 100%, 50%, 1); }
+
+.glowbutton:active
+{ opacity: 1;
+  color:                    hsla(260, 100%,  80%, 1);
+  border:         2px solid hsla(  0,   0%, 100%, 1);
+  background:               hsla(260, 100%,   0%, 1);
+  box-shadow:  0 0 75px 5px hsla(260, 100%,  50%, 1),
+               0 0 50px     hsla(260, 100%,  30%, 1) inset;
+  text-shadow:     0 0  2px hsla(260, 100%,  20%, 1),
+                   0 0 15px hsla(260, 100%,  50%, 1),
+                   0 0 10px hsla(260, 100%,  40%, 1),
+                   0 0 25px hsla(260, 100%,  50%, 1); }
+
+ /*background: hsla(260, 100%, 70%, .5);*/
+.context
+{ box-shadow: 0 0 200px hsla(260, 100%,  10%, 1) inset; border: 1px solid hsla(260, 100%, 10%,  1);
+  width: 100%; height: 100%; background: hsla(230, 100%, 70%, .8); }
+
+#new-session
+{ position: absolute; top: 10px; right: 10px; width: 220px; bottom: 10px;
+  text-align: center; font-size: 26px; border: 0; }
+
+.hide, #new-session:hover h3
+{ opacity: 0; }
+.show, #new-session h3
+{ opacity: 1; }
+
+
+
+#initializing input
+{ display: inline-block; width: 150px;  height: 30px; line-height: 30px;padding: 0; position: relative;
+  background: none; border: 0; font-size: 20px; font-family: Exo; font-weight: 900; text-indent: 10px; }
+
+#initializing input:after
+{ color: #aaa; display: block; pointer-events: none; font-style: italic; position: absolute; top: 0; left: 0; }
+
+#name:after
+{ content: "name"; }
+
+#sesssionId:after
+{ content: "new session"; }
+
+#initializing input:focus
+{ outline: 0; }
+
+#initializing input, #accept
+{ color:                         hsla(120, 100%, 70%, 1); }
+
+#initializing input:invalid, #name, #accept
+{ box-shadow: 0 -30px 30px -20px hsla(120, 100%, 50%, .7) inset,
+                  0 4px 2px -2px hsla(120, 100%, 70%, 1),
+                  0 6px 1px -3px hsla(120, 100%, 50%, 1); }
+
+
+#initializing input:valid, #initializing input:focus
+{ box-shadow: 0   0px 30px -20px hsla(120, 100%, 50%, .7) inset,
+              0   4px  2px  -2px hsla(120, 100%, 70%, 1),
+              0   6px  1px  -3px hsla(120, 100%, 50%, 1); }
+
+#initializing input:hover
+{ color:                         hsla(120, 100%, 70%, 1);
+  box-shadow: 0 -30px 30px -15px hsla(120, 100%, 50%, 1) inset,
+              0   4px  2px  -2px hsla(120, 100%, 70%, 1),
+              0   6px  1px  -3px hsla(120, 100%, 50%, 1); }
+
+
+#initializing input:invalid:after, #initializing input:after
+{ opacity: 1; }
+
+#initializing input:valid:after, #initializing input:focus:after
+{ opacity: 0; }
+
+#initializing input, #initializing input:after, .activated,  #initializing
+{ -moz-transition: .6s; -webkit-transition: .6s; transition: .6s; }
+
+
+
+#accept
+{ display: inline-block; opacity: 1; border: 0; padding: 0; width: 30px; height: 30px; line-height: 30px;
+  background: none; font-size: 20px; }
+
+#initializing input:invalid + input + #accept
+{ opacity: 0; }
+
+.glowbox, .show, .hide, #new-session, #new-session:hover, #new-session h3, .item-list li, .item-list li:hover
+{ -moz-transition: .12s; -webkit-transition: .12s; transition: .12s; }
+
+.glowbox
+{ -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+#holder, .context
+{ display: -webkit-box; -webkit-box-flex: 1; display: -moz-box; -moz-box-flex: 1; }
+
+
+#session
+{ position: absolute; right: 15px; top: 15px; font-size: 24px; font-style: italic; font-family: "Exo"; font-weight: 900;
+  color: #fff; text-shadow: 0 0 1px #000; }
