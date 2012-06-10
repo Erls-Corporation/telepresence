@@ -1,13 +1,13 @@
-!function(global, exports, require){
+!function(global){
 "use strict";
 /***/
-var meta      = require('meta-objects');
-var extend    = meta.utility.Object.extend;
-var isObject  = meta.utility.Object.isObject;
-var apply     = meta.utility.Function.apply;
-var applybind = meta.utility.Function.applybind;
-var flatten   = meta.utility.Array.flatten;
-var Emitter   = meta.Emitter;
+var util = meta.utility,
+    extend    = util.Object.extend,
+    isObject  = util.Object.isObject,
+    apply     = util.Function.apply,
+    applybind = util.Function.applybind,
+    flatten   = util.Array.flatten,
+    Emitter   = meta.Emitter;
 
 
 var $ = meta.namespace();
@@ -28,7 +28,7 @@ function Context(name, sessionId){
   this.document.close();
 
   var participants = {};
-  this.dispatcher = createDispatcher(this.window, sessionId, name);
+  this.dispatcher = meta.createDispatcher(this.window, sessionId, name);
   this.dispatcher.on('user-invite', function(evt, data){
     self.sessionId = data.id;
     data.names.forEach(function(name){
@@ -52,19 +52,16 @@ function Context(name, sessionId){
 }
 
 Context.prototype = extend(new Emitter, [
-  function setParent(parent){
-    parent.appendChild(parent);
-  },
   function destroy(){
     this.window = null;
     this.document = null;
-    this.iframe[0].parentNode.removeChild(this.iframe[0]) ;
+    this.iframe[0].parentNode.removeChild(this.iframe[0]);
     this.iframe = null;
     this.emit('destroyed');
   },
   function loadCode(source){
     var self = this;
-    this.dispatcher.broadcaster.once('ready', function(evt){
+    this.dispatcher.broadcaster.on('code-load', function(evt){
       self.emit('load', source);
     });
     this.dispatcher.loadCode(source);
@@ -83,16 +80,16 @@ Participant.prototype.remove = function remove(){
 }
 
 
-var T = {};
+var TRAPS = {};
 ['UNKNOWN', 'GET', 'SET', 'DESCRIBE', 'DEFINE', 'DELETE', 'HAS',
   'OWNS', 'ENUMERATE', 'KEYS', 'NAMES', 'FIX', 'APPLY', 'CONSTRUCT' ]
 .forEach(function(trap, index){
-  T[trap] = index;
+  TRAPS[trap] = index;
 });
 
 
 
-exports.context = function context(name, sessionId){
+meta.createContext = function createContext(name, sessionId){
   return new Context(name, sessionId);
 };
 
@@ -110,17 +107,13 @@ _('#accept').on('click', function(e){
     events.append('li|'+record.type);
   });
 
-  context.dispatcher.broadcaster.on('broadcast', function(e, record){
-    events.append('li|'+T[e.data.type]);
-  });
+  // context.dispatcher.broadcaster.on('broadcast', function(e, record){
+  //   events.append('li|'+TRAPS[e.data.type]);
+  // });
 
   context.loadCode('./jquery-1.7.2.js');
   console.log(window.c = context);
 });
 
 /***/
-}(new Function('return this')(),
-  typeof exports !== 'undefined' ? exports : this,
-  typeof require !== 'undefined' ? require : function(s,r){
-    return function require(n){ return s[n] }
-  }(new Function('return this')()));
+}(new Function('return this')());

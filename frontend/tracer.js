@@ -1,14 +1,14 @@
-!function(global, exports, require){
+!function(global){
 "use strict";
 
 /***/
-var meta = require('meta-objects');
-var extend = meta.utility.Object.extend;
-var isObject = meta.utility.Object.isObject;
-var apply = meta.utility.Function.apply;
-var applybind = meta.utility.Function.applybind;
-var flatten = meta.utility.Array.flatten;
-var Emitter = meta.Emitter;
+var util = meta.utility,
+    extend = util.Object.extend,
+    isObject = util.Object.isObject,
+    apply = util.Function.apply,
+    applybind = util.Function.applybind,
+    flatten = util.Array.flatten,
+    Emitter = meta.Emitter;
 
 
 function arrayToHash(array){
@@ -20,20 +20,13 @@ function arrayToHash(array){
 }
 
 
-function log(message){
-  console.log(message);
+function log(){
+  console.log.apply(console, arguments);
 }
-var rng = function(taken){
-  return function rng(){
-    var id = Math.random().toString(16).slice(2);
-    return id in taken ? rng() : (taken[id] = id);
-  }
-}(Object.create(null));
-
 
 
 var CMDS = [ 'SESSION_INVITE', 'SESSION_CREATE', 'SESSION_JOIN', 'SESSION_PART',
-  'TRACE_START','TRACE_STOP', 'TRACE_EVENT', 'LISTEN_START', 'LISTEN_STOP' ];
+             'TRACE_START','TRACE_STOP', 'TRACE_EVENT', 'LISTEN_START', 'LISTEN_STOP' ];
 
 var CMDS_ = arrayToHash(CMDS);
 
@@ -50,14 +43,30 @@ var SESSION_INVITE = 0,
 
 var EVENT_TOKEN = String.fromCharCode(30);
 
+var TRAPS = [ 'UNKNOWN', 'GET', 'SET', 'DESCRIBE', 'DEFINE', 'DELETE', 'HAS',
+              'OWNS', 'ENUMERATE', 'KEYS', 'NAMES', 'FIX', 'APPLY', 'CONSTRUCT' ];
+
+TRAPS.forEach(function(trap, index){
+  TRAPS[trap] = index;
+});
+
+
+var nativeNames = arrayToHash([
+  'Error', 'EvalError', 'RangeError', 'ReferenceError', 'SyntaxError', 'TypeError', 'URIError',
+  'Array', 'Boolean', 'Date', /*Function,*/ 'Map', 'Number', 'Object', 'Proxy', 'RegExp', 'Set', 'String', 'WeakMap',
+  'decodeURI', 'decodeURIComponent', 'encodeURI', 'encodeURIComponent', 'escape', /*eval,*/
+  'isFinite', 'isNaN', 'parseFloat', 'parseInt', 'unescape', 'Math', 'JSON'
+]);
+
+
 
 function SessionEvent(type, name, sessionId, target){
   this.target = target;
   this.type = types;
   this.name = name;
   this.sessionId = sessionId;
-
 }
+
 
 
 
@@ -68,7 +77,7 @@ function Dispatcher(url, context, session, name){
   if (name)
     this.name = name;
   this.socket = new WebSocket(url);
-  this.reifier = new EventReifier(this, context);
+  this.reifier = new Reifier(this, context);
 
   this.socket.log('error close');
 
@@ -90,9 +99,8 @@ function Dispatcher(url, context, session, name){
     self.emit('connect', session);
   });
 
-
   this.broadcaster = new Broadcaster(context);
-  this.broadcaster.on('start', function(evt, source){
+  this.broadcaster.on('code-load', function(evt, source){
     self.sendCommand(TRACE_START, source);
   });
 
@@ -122,71 +130,77 @@ Dispatcher.prototype = extend(new Emitter, [
 
 
 
-// ###################
-// ### TraceLoader ###
-// ###################
 
-function TraceLoader(source){
-  Emitter.call(this);
-  var self = this;
-  this.state = 'loading';
-  
-  this.loader = new XHR('', function(src){
-    self.code = src;
-    self.state = 'downloaded';
-    self.emit('download', src);
-  }).exec(source);
-}
-
-
-extend(TraceLoader, {
-  TRAPS: [ 'UNKNOWN', 'GET', 'SET', 'DESCRIBE', 'DEFINE', 'DELETE', 'HAS',
-           'OWNS', 'ENUMERATE', 'KEYS', 'NAMES', 'FIX', 'APPLY', 'CONSTRUCT' ]
-});
-
-var T = TraceLoader.TRAPS;
-T.forEach(function(trap, index){
-  T[trap] = index;
-});
-
-
-var nativeNames = arrayToHash([ 'Error', 'EvalError', 'RangeError', 'ReferenceError', 'SyntaxError', 'TypeError', 'URIError',
-  'Array', 'Boolean', 'Date', /*Function,*/ 'Map', 'Number', 'Object', 'Proxy', 'RegExp', 'Set', 'String', 'WeakMap',
-  'decodeURI', 'decodeURIComponent', 'encodeURI', 'encodeURIComponent', 'escape', /*eval,*/
-  'isFinite', 'isNaN', 'parseFloat', 'parseInt', 'unescape', 'Math', 'JSON'
-]);
-
-TraceLoader.prototype = extend(new Emitter, [
-  function compile(context){
-    var self = this;
-    var globalKeys = Object.getOwnPropertyNames(context).filter(function(key){
-      return /^[\w_$]*$/.test(key)
-             && isObject(context[key])
-             && !(key in nativeNames);
-    });
-
-    var tracer = meta.tracer(context);
-    var interceptors = globalKeys.map(function(key){
-      return tracer.root[key];
-    });
-
-    var root = tracer.root;
-    delete tracer.root;
-
-    this.code = '\n'+this.code+'\n';
-    var compiled = Function.apply(null, globalKeys.concat(this.code));
-    this.state = 'compiled';
-    this.run = function run(){
-      compiled.apply(root, interceptors);
-      self.state = 'executed';
-    };
-
-    return this.emitter = tracer;
+var Script = function(){
+  if (typeof require === 'function') {
+    try {
+      var fs = require('fs');
+      var loader = {
+        request: function request(source, callback){
+          var file = fs.readFileSync(source, 'utf8');
+          setTimeout(function(){ callback(source) }, 1);
+        }
+      };
+    } catch (e) {
+      var loader = new XHR;
+    }
+  } else {
+    var loader = new XHR;
   }
-]);
 
-function isId(n){
-  return typeof n === 'number' && n >= 10000;
+  function Script(origin, code){
+    Object.defineProperties(this, {
+      origin: { enumerable: true, value: origin },
+      code: { value: code }
+    });
+  }
+
+  extend(Script, [
+    function load(origin, callback){
+      if (typeof origin === 'function') {
+        setTimeout(function(){
+          callback(new Script(origin, '('+origin+')();'));
+        }, 1);
+      } else {
+        loader.request(origin, function(code){
+          callback(new Script(origin, code));
+        });
+      }
+    }
+  ]);
+
+  extend(Script.prototype, [
+    function compile(keys){
+      this.compiled = Function.apply(null, keys.concat('\n'+this.code+'\n'));
+    },
+    function run(context, env){
+      this.compiled.apply(context, env);
+    }
+  ]);
+
+  return Script;
+}();
+
+
+function compileRun(context, script){
+  var tracer = meta.tracer(context);
+  var root = tracer.root;
+  var keys = Object.getOwnPropertyNames(context).filter(function(key){
+    return /^[\w_$]*$/.test(key)
+           && isObject(context[key])
+           && !(key in nativeNames);
+  });
+  var interceptors = keys.map(function(key){
+    return root[key];
+  });
+
+  setTimeout(function(){
+    script.compile(keys);
+    script.run(root, interceptors)
+  }, 100);
+
+  delete tracer.root;
+  return tracer;
 }
 
 
@@ -216,18 +230,123 @@ extend(Record, [
       record[key] = json[key];
     });
 
-    record.trap = TraceLoader.TRAPS[record.trap];
+    record.trap = TRAPS[record.trap];
     return record;
   },
 ]);
 
 
+// ###################
+// ### Broadcaster ###
+// ###################
 
-// ########################
-// ### EventReifier ###
-// ########################
+function Broadcaster(context, source){
+  var self = this;
+  this.map = new WeakMap;
+  this.map.index = 10000;
+  this.names = Object.create(null);
+  this.context = context;
+  this.scripts = [];
+  this.names.___count = 1;
+  this.names.window = 0
+  this.resolve(context);
+  if (source)
+    this.loadCode(source);
+}
 
-function EventReifier(dispatcher, context){
+var functionNames = new WeakMap;
+
+
+Broadcaster.prototype = extend(new Emitter, [
+  function loadCode(source){
+    var self = this;
+    var context = this.context || global;
+
+    Script.load(source, function(script){
+      var tracer = compileRun(context, script);
+
+      //setTimeout(function(){
+        if (!self.startTime) {
+          self.startTime = Date.now();
+          self.emit('start');
+        }
+
+        TRAPS.forEach(function(trap){
+          if (typeof self[trap] === 'function') {
+            tracer.on(trap.toLowerCase(), function(evt){
+              self[trap].call(self, evt);
+            });
+          }
+        });
+
+        self.scripts.push(script);
+        self.emit('code-load', source);
+      //}, 10);
+    });
+  },
+  function resolveName(name){
+    if (name in this.names)
+      return this.names[name];
+
+    this.names[name] = this.names.___count++;
+    return name;
+  },
+  function resolve(o){
+    if (!isObject(o))
+      return o;
+    if (this.map.has(o))
+      return this.map.get(o);
+
+    this.map.set(o, this.map.index++);
+    return this.map.index - 1;
+  },
+  function broadcast(trap, target, name, result, args){
+    target = this.resolve(target);
+    result = this.resolve(result)
+    if (args)
+      args = args.map(this.resolve.bind(this));
+
+    var record = new Record(this.elapsed(), trap, target, this.resolveName(name), result, args);
+    this.emit('broadcast', record);
+  },
+  function elapsed(){
+    return Date.now() - this.startTime;
+  },
+  function GET(e){
+    if (typeof e.result === 'function')
+      functionNames.set(e.result, e.property);
+    this.broadcast(TRAPS.GET, e.target, e.property, e.result);
+  },
+  function SET(e){
+    this.broadcast(TRAPS.SET, e.target, e.property, e.value);
+  },
+  function DELETE(e){
+    this.broadcast(TRAPS.DELETE, e.target, e.property);
+  },
+  function FIX(e){
+    this.broadcast(TRAPS.FIX, e.target);
+  },
+  function DESCRIBE(e){
+    this.broadcast(TRAPS.DESCRIBE, e.target, e.property, e.result);
+  },
+  function DEFINE(e){
+    this.broadcast(TRAPS.DEFINE, e.target, e.property, e.value);
+  },
+  function APPLY(e){
+    this.broadcast(TRAPS.APPLY, e.context, functionNames.get(e.target) || e.target.name, e.result, e.args);
+  },
+  function CONSTRUCT(e){
+    this.broadcast(TRAPS.CONSTRUCT, e.target, e.name, e.result, e.args);
+  }
+]);
+
+
+
+// ###############
+// ### Reifier ###
+// ###############
+
+function Reifier(dispatcher, context){
   var self = this;
   Emitter.call(this);
   this.map = Object.create(null);
@@ -240,7 +359,7 @@ function EventReifier(dispatcher, context){
   });
 }
 
-EventReifier.prototype = extend(new Emitter, [
+Reifier.prototype = extend(new Emitter, [
   function resolveName(name){
     if (typeof name === 'number')
       return this.names[name];
@@ -283,6 +402,8 @@ EventReifier.prototype = extend(new Emitter, [
       var result = this.resolve(record.result);
       if (result !== undefined)
         target[record.name] = result;
+      else if (target[record.name])
+        this.resolve(record.result, target[record.name]);
     }
   },
   function DELETE(record){
@@ -309,7 +430,6 @@ EventReifier.prototype = extend(new Emitter, [
         case 1: result = new fn(args[0]); break;
         case 2: result = new fn(args[0], args[1]); break;
         case 3: result = new fn(args[0], args[1], args[2]); break;
-        case 4: result = new fn(args[0], args[1], args[2], args[3]); break;
         default: result = new (applybind(fn, flatten(null, args)));
       }
       return this.resolve(record.result, result);
@@ -318,111 +438,13 @@ EventReifier.prototype = extend(new Emitter, [
 ]);
 
 
-// ###################
-// ### Broadcaster ###
-// ###################
-
-function Broadcaster(context, source){
-  var self = this;
-  this.map = new WeakMap;
-  this.map.index = 10000;
-  this.names = Object.create(null);
-  this.context = context;
-  this.names.___count = 1;
-  this.resolve(context);
-  if (source)
-    this.loadCode(source);
-}
-
-var functionNames = new WeakMap;
-
-Broadcaster.prototype = extend(new Emitter, [
-  function loadCode(source){
-    var self = this;
-    var tracer = new TraceLoader(source);
-    tracer.on('download', function(){
-      var emitter = tracer.compile(self.context);
-
-      T.forEach(function(trap){
-        if (typeof self[trap] === 'function')
-          emitter.on(trap.toLowerCase(), function(e){
-            self[trap].call(self, e);
-          });
-      });
-
-      self.startTime = Date.now();
-      tracer.run();
-      self.emit('start', source);
-    });
-    return tracer;
-  },
-  function resolveName(name){
-    if (name in this.names)
-      return this.names[name];
-
-    this.names[name] = this.names.___count++;
-    return name;
-  },
-  function resolve(o){
-    if (!isObject(o))
-      return o;
-    if (this.map.has(o))
-      return this.map.get(o);
-
-    this.map.set(o, this.map.index++);
-    return this.map.index - 1;
-  },
-  function broadcast(trap, target, name, result, args){
-    target = this.resolve(target);
-    result = this.resolve(result)
-    if (args)
-      args = args.map(this.resolve.bind(this));
-
-    var record = new Record(this.elapsed(), trap, target, this.resolveName(name), result, args);
-    this.emit('broadcast', record);
-  },
-  function elapsed(){
-    return Date.now() - this.startTime;
-  },
-  function GET(e){
-    if (typeof e.result === 'function')
-      functionNames.set(e.result, e.property);
-    this.broadcast(T.GET, e.target, e.property, e.result);
-  },
-  function SET(e){
-    this.broadcast(T.SET, e.target, e.property, e.value);
-  },
-  function DELETE(e){
-    this.broadcast(T.DELETE, e.target, e.property);
-  },
-  function FIX(e){
-    this.broadcast(T.FIX, e.target);
-  },
-  function DESCRIBE(e){
-    this.broadcast(T.DESCRIBE, e.target, e.property, e.result);
-  },
-  function DEFINE(e){
-    this.broadcast(T.DEFINE, e.target, e.property, e.value);
-  },
-  function APPLY(e){
-    this.broadcast(T.APPLY, e.context, functionNames.get(e.target) || e.target.name, e.result, e.args);
-  },
-  function CONSTRUCT(e){
-    this.broadcast(T.CONSTRUCT, e.target, e.name, e.result, e.args);
-  }
-]);
 
 
 var socketPath = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host;
-var sharedId = location.pathname.slice(1);
 
-exports.createDispatcher = function createDispatcher(context, sessionId, name){
+meta.createDispatcher = function createDispatcher(context, sessionId, name){
   return new Dispatcher(socketPath, context || global, sessionId, name);
 }
 
 /***/
-}(new Function('return this')(),
-  typeof exports !== 'undefined' ? exports : this,
-  typeof require !== 'undefined' ? require : function(s,r){
-    return function require(n){ return s[n] }
-  }(new Function('return this')()));
+}(new Function('return this')());
